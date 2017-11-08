@@ -41,8 +41,19 @@ class TabouPlayer extends Player
         // How can i display the result of each round ? $this->prettyDisplay()
         // -------------------------------------    -----------------------------------------------------
 
-        $choice = parent::scissorsChoice();
-
+        // get opponent last choice
+        $opp_last_choice = $this->result->getLastChoiceFor($this->opponentSide);
+        // get opponent last result
+        $opp_last_score = $this->result->getChoicesFor($this->opponentSide);
+        if ($opp_last_choice === 'paper') {
+            $choice = parent::scissorsChoice();
+        }
+        elseif ($opp_last_choice === 'rock') {
+            $choice = parent::paperChoice();
+        }
+        else {
+            $choice = parent::rockChoice();
+        }
         return $choice;
     }
 };
