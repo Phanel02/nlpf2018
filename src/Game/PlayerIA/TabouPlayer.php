@@ -53,34 +53,56 @@ class TabouPlayer extends Player
         // get my last choice
         $my_choice_size = sizeof($my_choices);
 
+
+
         // First move
         if ($nb_round === 0) {
             //Betting on the fact that people will mostly start with rock to counter the default scissors
             $choice = parent::paperChoice();
         }
-        /*else {
-            //Betting on the fact that people will try to counter my last move (unlikely at 20:34)
-            $my_last_choice = $my_choices[$my_choice_size - 1];
-            if ($my_last_choice === 'paper') {
-                $choice = parent::rockChoice();
-            }
-            elseif ($my_last_choice === 'rock') {
-                $choice = parent::scissorsChoice();
-            }
-            else {
-                $choice = parent::paperChoice();
-            }  
-        }*/
         else {
-            //simple counter on people last move
-            if ($opp_last_choice === 'paper') {
-                $choice = parent::scissorsChoice();
-            }
-            elseif ($opp_last_choice === 'rock') {
-                $choice = parent::paperChoice();
+
+            // First we will try to get the 'profil of the player' : is he/she using the same sign, or is he using a basic counter strategy
+            $opp_stats = $this->result->getStatsFor($this->opponentSide);
+            $opp_s = $opp_stats["scissors"];
+            $opp_p = $opp_stats["paper"];
+            $opp_r = $opp_stats["rock"];
+
+            $is_opp_monkey = 0;
+
+            if ($opp_s === 0 or $opp_p === 0 or $opp_r === 0) {
+                // Setting opponent as monkey solo sign player
+                $is_opp_monkey = 1;
             }
             else {
-                $choice = parent::rockChoice();
+                // Setting opponent as simple counter strategy player
+                $is_opp_monkey = 2;
+            }
+            
+            //Betting on the fact that people will try to counter my last move
+            if ($is_opp_monkey == 2) {
+                $my_last_choice = $my_choices[$my_choice_size - 1];
+                if ($my_last_choice === 'paper') {
+                    $choice = parent::rockChoice();
+                }
+                elseif ($my_last_choice === 'rock') {
+                    $choice = parent::scissorsChoice();
+                }
+                else {
+                    $choice = parent::paperChoice();
+                }
+            }
+            //simple counter on people last move
+            else {
+                if ($opp_last_choice === 'paper') {
+                    $choice = parent::scissorsChoice();
+                }
+                elseif ($opp_last_choice === 'rock') {
+                    $choice = parent::paperChoice();
+                }
+                else {
+                    $choice = parent::rockChoice();
+                }
             }
         }
 
