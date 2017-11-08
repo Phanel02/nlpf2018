@@ -78,7 +78,9 @@ class TabouPlayer extends Player
                 // Setting opponent as simple counter strategy player
                 $is_opp_monkey = 2;
             }
-            
+            // Setting opponent as cheater that tries to counter my counter counter strategy
+                //$is_opp_monkey = 3;
+
             //Betting on the fact that people will try to counter my last move
             if ($is_opp_monkey == 2) {
                 $my_last_choice = $my_choices[$my_choice_size - 1];
@@ -93,11 +95,24 @@ class TabouPlayer extends Player
                 }
             }
             //simple counter on people last move
-            else {
+            elseif ($is_opp_monkey == 1) {
                 if ($opp_last_choice === 'paper') {
                     $choice = parent::scissorsChoice();
                 }
                 elseif ($opp_last_choice === 'rock') {
+                    $choice = parent::paperChoice();
+                }
+                else {
+                    $choice = parent::rockChoice();
+                }
+            }
+            //beating the cheaters that tries to counter me
+            else {
+                $my_last_choice = $my_choices[$my_choice_size - 1];
+                if ($my_last_choice === 'paper') {
+                    $choice = parent::scissorsChoice();
+                }
+                elseif ($my_last_choice === 'rock') {
                     $choice = parent::paperChoice();
                 }
                 else {
