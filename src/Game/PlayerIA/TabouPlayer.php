@@ -44,29 +44,35 @@ class TabouPlayer extends Player
         // INIT
         //Start with scissors as first move
         $nb_round = $this->result->getNbRound();
-
         // get opponent last choice
         $opp_last_choice = $this->result->getLastChoiceFor($this->opponentSide);
-         
         // get opponent last result
         $opp_last_score = $this->result->getChoicesFor($this->opponentSide);
-
         // get my choices
         $my_choices = $this->result->getChoicesFor($this->mySide);
-
         // get my last choice
-
+        $my_choice_size = sizeof($my_choices);
 
         // First move
         if ($nb_round === 0) {
             //Betting on the fact that people will mostly start with rock to counter the default scissors
             $choice = parent::paperChoice();
         }
-        /*elseif ($nb_round === 1) {
-            //Betting on the fact that people will try to counter my last move
-            
+        /*else {
+            //Betting on the fact that people will try to counter my last move (unlikely at 20:34)
+            $my_last_choice = $my_choices[$my_choice_size - 1];
+            if ($my_last_choice === 'paper') {
+                $choice = parent::rockChoice();
+            }
+            elseif ($my_last_choice === 'rock') {
+                $choice = parent::scissorsChoice();
+            }
+            else {
+                $choice = parent::paperChoice();
+            }  
         }*/
         else {
+            //simple counter on people last move
             if ($opp_last_choice === 'paper') {
                 $choice = parent::scissorsChoice();
             }
