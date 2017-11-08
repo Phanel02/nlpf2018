@@ -41,19 +41,47 @@ class TabouPlayer extends Player
         // How can i display the result of each round ? $this->prettyDisplay()
         // -------------------------------------    -----------------------------------------------------
 
+        // INIT
+        //Start with scissors as first move
+        $nb_round = $this->result->getNbRound();
+
         // get opponent last choice
         $opp_last_choice = $this->result->getLastChoiceFor($this->opponentSide);
+         
         // get opponent last result
         $opp_last_score = $this->result->getChoicesFor($this->opponentSide);
-        if ($opp_last_choice === 'paper') {
-            $choice = parent::scissorsChoice();
-        }
-        elseif ($opp_last_choice === 'rock') {
+
+        // get my choices
+        $my_choices = $this->result->getChoicesFor($this->mySide);
+
+        // get my last choice
+
+
+        // First move
+        if ($nb_round === 0) {
+            //Betting on the fact that people will mostly start with rock to counter the default scissors
             $choice = parent::paperChoice();
         }
+        /*elseif ($nb_round === 1) {
+            //Betting on the fact that people will try to counter my last move
+            
+        }*/
         else {
-            $choice = parent::rockChoice();
+            if ($opp_last_choice === 'paper') {
+                $choice = parent::scissorsChoice();
+            }
+            elseif ($opp_last_choice === 'rock') {
+                $choice = parent::paperChoice();
+            }
+            else {
+                $choice = parent::rockChoice();
+            }
         }
+
         return $choice;
+        /*// If opponent succeed, it is most likely to continue with the same choice
+        if ($opp_last_score === 5 or $opp_last_score === 1) {
+            
+        }*/
     }
 };
